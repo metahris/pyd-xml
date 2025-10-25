@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=64", "wheel", "build"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyd-xml"
+version = "0.1.0"
+description = "Easily serialize Pydantic models to and from XML."
+authors = [
+    { name = "Mohamed Tahri", email = "simotahri1@gmail.com" }
+]
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+
+dependencies = [
+    "pydantic>=2.0,<3.0",
+    "lxml>=4.9"
+]
+
+keywords = ["pydantic", "xml", "serialization", "deserialization", "parser"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Text Processing :: Markup :: XML",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License"
+]
+
+[project.urls]
+Homepage = "https://github.com/metahris/pyd-xml"
+Repository = "https://github.com/metahris/pyd-xml"
+Documentation = "https://github.com/metahris/pyd-xml#readme"
+Issues = "https://github.com/metahris/pyd-xml/issues"
+Changelog = "https://github.com/metahris/pyd-xml/releases"
+
+[tool.setuptools]
+packages = ["pyd_xml"]
+
+[tool.setuptools.package-data]
+pyd_xml = ["py.typed"]
+
+[tool.pytest.ini_options]
+addopts = "-v"
+testpaths = ["tests"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "mypy>=1.0",
+    "black>=23.0",
+    "ruff>=0.1.0"
+]
+all = [
+    "pydantic>=2.0,<3.0",
+    "lxml>=4.9"
+]
