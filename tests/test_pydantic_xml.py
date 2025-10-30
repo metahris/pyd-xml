@@ -1,5 +1,6 @@
 import pytest
 from lxml import etree
+from pydantic import ConfigDict
 
 from pyd_xml import (
     XMLModel,
@@ -129,6 +130,40 @@ def test_xml_to_model_function(company_instance):
     element = etree.fromstring(xml_str)
     decoded = xml_to_model(Company, element)
     assert decoded == company_instance
+
+
+class InnerModel(XMLModel):
+    value: int
+
+
+class OuterModel(XMLModel):
+    model_config = ConfigDict(xml_tag="outer")
+    name: str
+    inner: InnerModel = xml_field(name='innerModel')
+
+
+class DefaultModel(XMLModel):
+    # no xml_tag defined
+    field: str
+
+
+# -----------------------------
+# ✅ Tests
+# -----------------------------
+
+def test_model_uses_custom_xml_tag_from_model_config():
+    """Model should use the xml_tag from its model_config."""
+    obj = OuterModel(name="test", inner=InnerModel(value=42))
+    elem = model_to_xml(obj)
+
+    # Assert root tag equals xml_tag in model_config
+    assert elem.tag == "outer"
+
+    # Assert nested model also respects xml_tag
+    inner_el = elem.find("innerModel")
+    assert inner_el is not None
+    assert inner_el.tag == "innerModel"
+    assert inner_el.find("value").text == "42"
 
 
 # -----------------------------

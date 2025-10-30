@@ -7,7 +7,14 @@ from .exceptions import EncodeError
 def model_to_xml(model: BaseModel, tag_name: str | None = None) -> etree.Element:
     """Convert a Pydantic model instance into an XML element."""
     try:
-        tag_name = tag_name or model.__class__.__name__
+        # ✅ Pydantic v2 config support
+        model_config = getattr(model.__class__, "model_config", None)
+        config_tag = None
+        if model_config and isinstance(model_config, dict):
+            config_tag = model_config.get("xml_tag")
+
+        # Priority: explicit arg > Config.xml_tag > auto camelCase
+        tag_name = tag_name or config_tag or model.__class__.__name__
         element = etree.Element(tag_name)
 
         for name, field in model.__class__.model_fields.items():
